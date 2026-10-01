@@ -1,0 +1,135 @@
+// 어두운 테마는 색만 덮어써 기존 패널 크기와 배치를 유지합니다.
+.experience {
+  background: #d9f2ff;
+  transition: background-color 700ms ease, color 400ms ease;
+  .world-frame { position: relative; isolation: isolate; }
+  .world-frame::before {
+    content: ''; position: absolute; inset: 0; z-index: -1;
+    background:
+      radial-gradient(ellipse at 50% 100%, #b8c8ed24 0 10%, transparent 52%),
+      linear-gradient(180deg, #314b70, #6682a8 65%, #8b91ad);
+    opacity: 0; transition: opacity 1s ease; pointer-events: none;
+  }
+  .world-frame::after {
+    content: ''; position: absolute; inset: 0; z-index: -1; pointer-events: none;
+    background-image:
+      radial-gradient(circle at 79% 6%, #fff7d6 0 26px, #ffeaa9 27px 32px, #ffe58f55 33px 42px, transparent 45px),
+      radial-gradient(circle, #ffffff 0 1px, transparent 1.7px),
+      radial-gradient(circle, #dce9ff 0 1.1px, transparent 1.8px);
+    background-size: 100% 100%, 168px 143px, 271px 217px;
+    background-position: 0 0, 24px 17px, 103px 68px;
+    background-repeat: no-repeat, repeat, repeat;
+    opacity: 0;
+    transition: opacity 1.2s ease;
+  }
+  .travel-menu, .guide-card, .mailbox-paper, .topbar__icon, .game-help,
+  .touch-stick, .touch-stick__knob, .touch-actions button {
+    transition: background-color 400ms ease, color 400ms ease, border-color 400ms ease;
+  }
+}
+
+.experience[data-theme='dark'] {
+  color-scheme: dark;
+  color: #f2f3f5;
+  background: #314b70;
+  .world-frame::before { opacity: 1; }
+  .world-frame::after { opacity: 0.9; }
+  // 낮의 맑은 블루 타이틀 인상을 밤에도 유지하되, 배경 위 가독성만 보강합니다.
+  .journey-title {
+    color: #b9deed;
+    // 라이트모드와 오프셋·번짐을 똑같이 두고 그림자 색만 바꿉니다.
+    text-shadow: 0 1px 5px #18344880;
+  }
+  .journey-title--hud img { filter: drop-shadow(0 3px 10px #111a2d66); }
+  .journey-title small { color: #d7e8ee; }
+  .topbar__icon, .game-help { color: #eef0f3; background: #252932e8; border-color: #666d7b; box-shadow: 0 6px 18px #11141b52; }
+  .topbar__icon:hover, .topbar__icon[aria-expanded='true'] { color: #ffffff; background: #3a404c; }
+  .topbar__theme { color: #ddd6bd; }
+  .menu-backdrop { background: #17202a52; }
+  .travel-menu, .travel-menu.feature-panel, .travel-menu.feature-panel--contact {
+    background: #353b47f5; color: #f5f6f7; border-color: transparent; box-shadow: 0 18px 55px #11141b66;
+    scrollbar-color: #7a8391 transparent;
+  }
+  .travel-menu__close { background: #4a515e; color: #f5f6f7; }
+  .travel-menu nav button { background: #424955; color: #f5f6f7; }
+  .travel-menu nav button:hover { background: #505866; }
+  .travel-menu nav button span, .travel-menu__back, .game-help__keys kbd { background: #515966; color: #f1f3f5; }
+  .travel-menu nav button small, .travel-menu__eyebrow, .travel-menu__footer, .game-help__keys small { color: #c2c7cf; }
+  .guidebook, .sound-settings { color: #f2f3f5; }
+  .guidebook__intro h2 { color: #e4e8ed; }
+  .guide-card, .sound-settings__group { background: #404753; border-color: #68717e; }
+  .guide-card { border-color: transparent; }
+  .sound-settings__group { border-color: transparent; }
+  .guide-card h3 { color: #e5e9ee; border-color: transparent; }
+  .guide-card h3 small, .guide-card dt, .guidebook__note, .panel-kicker, .portrait-fallback { color: #c2c7cf; }
+  .guidebook__story blockquote { color: #dce1e8; }
+  .turn-labels span, .guide-tags span { background: #515966; color: #f0f2f4; }
+  .guide-palette i { border-color: transparent; }
+  .feature-panel__scroll { scrollbar-color: #7a8391 transparent; }
+  .feature-panel__scroll::-webkit-scrollbar-thumb { background-color: #7a8391; }
+  .mailbox-paper { background: #404753; border-color: transparent; }
+  .mailbox-tabs { background: #303641; }
+  .mailbox-tabs button { color: #c2c7cf; }
+  .mailbox-tabs button[aria-pressed='true'] { background: #596270; color: #ffffff; }
+  .mailbox-panel form label { color: #d5d8de; }
+  .mailbox-panel form input, .mailbox-panel form textarea { color: #f5f6f7; background: #303641; border-color: transparent; }
+  .mailbox-panel form input::placeholder, .mailbox-panel form textarea::placeholder { color: #a2a9b4; }
+  .mailbox-panel .letter-send { background: #5b6472; border-color: #858e9c; color: #ffffff; }
+  .mailbox-footnote, .letter-count, .letter-status, .mailbox-contact span { color: #c2c7cf; }
+  .mailbox-contact .contact-pending { background: #4b535f; }
+  .mailbox-contact .mailbox-contact__email { background: #303641; color: #dce1e8; border-color: #68717e; }
+  .mailbox-contact .mailbox-contact__email small { background: #515966; color: #f0f2f4; }
+  .mailbox-contact .mailbox-contact__copy-status { color: #c2c7cf; }
+  .sound-settings__intro, .sound-settings > small { color: #c2c7cf; }
+  .sound-settings__auto, .sound-settings__hint { color: #c2c7cf; }
+  .sound-settings__presets button { color: #d5d9df; background: #303641; border-color: #68717e; }
+  .sound-settings__presets button[aria-pressed='true'] { color: #ffffff; background: #596270; border-color: #858e9c; }
+  .sound-settings__toggle, .sound-settings__slider output { color: #ebedf0; background: #303641; border-color: #68717e; }
+  .sound-settings__slider output { border-color: transparent; }
+  .sound-settings__toggle[aria-pressed='true'] { color: #ffffff; background: #596270; border-color: #858e9c; }
+  .sound-settings__slider input {
+    &::-webkit-slider-runnable-track { background: linear-gradient(to right, #c0c8d2 0%, #c0c8d2 var(--volume-fill), #59616d var(--volume-fill), #59616d 100%); }
+    &::-moz-range-track { background: linear-gradient(to right, #c0c8d2 0%, #c0c8d2 var(--volume-fill), #59616d var(--volume-fill), #59616d 100%); }
+    &::-webkit-slider-thumb { background: #f2f3f5; border-color: #777e89; }
+    &::-moz-range-thumb { background: #f2f3f5; border-color: #777e89; }
+  }
+  .object-hint {
+    // 꼬리와 본체가 겹쳐도 같은 색으로 보이도록 완전 불투명하게 둡니다.
+    background: #3a414d;
+    color: #eef6f8;
+    border-color: transparent;
+    box-shadow: 0 4px 12px #11141b32;
+  }
+  .object-hint::after {
+    background: #3a414d;
+    border-color: transparent;
+  }
+  .object-hint kbd {
+    background: #b9deed;
+    color: #395568;
+  }
+  .touch-stick { background: #25293280; border-color: #686f7b80; }
+  .touch-stick__knob { background: #c5c9d0; border-color: #f0f1f3; box-shadow: 0 3px 10px #11141b60; }
+  .touch-interact, .touch-run, .touch-jump { background: #252932e8; color: #f2f3f5; border-color: #686f7b; box-shadow: 0 3px 10px #11141b52; }
+  .touch-run small { color: #b7bbc4; }
+  .touch-run.is-held, .touch-jump:active, .touch-interact:active:not(:disabled) { background: #4a505b; }
+  .touch-interact:disabled { background: #25293290; color: #858b96; border-color: #494f5a80; }
+  .loading-screen { background: #18294d; color: #f2f3f5; }
+  .loading-screen__logo { filter: drop-shadow(0 12px 28px #07132d52); }
+  .loading-screen p { color: #c4c9d1; }
+  .journey-start__primary { background: #5b6472; color: #ffffff; border-color: #858e9c; }
+  .journey-start__silent { color: #fff4cf; text-shadow: 0 1px 5px #07132d, 0 0 12px #07132dcc; }
+  .loading-screen__progress { background: #424955; border-color: #737b89; }
+  .error-message { background: #301d2d; color: #ffb9c7; }
+
+  // 선은 숨기되 두께는 유지해 라이트모드와 치수가 완전히 같게 둡니다.
+  button { border-color: transparent !important; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .experience, .experience .world-frame::before, .experience .travel-menu,
+  .experience .guide-card, .experience .mailbox-paper, .experience .topbar__icon,
+  .experience .game-help, .experience .touch-stick, .experience .touch-stick__knob,
+  .experience .touch-actions button { transition: none; }
+  .experience .world-frame::after { animation: none; }
+}

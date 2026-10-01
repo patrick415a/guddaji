@@ -1,0 +1,596 @@
+@use "sass:color";
+
+$sky-blue: #c8eaff;
+$ink-blue: #48738d;
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  overflow: hidden;
+}
+
+body {
+  font-size: 14px;
+  // background: linear-gradient(180deg, #b9e4ff 0%, #d9f2ff 52%, #f1fbff 100%);
+  color: $ink-blue;
+  font-family: "SUIT", "Noto Sans KR", system-ui, sans-serif;
+}
+
+button {
+  outline: none;
+}
+
+.experience,
+.experience__canvas {
+  width: 100%;
+  height: 100%;
+}
+
+.experience {
+  position: relative;
+  height: 100%;
+  height: 100dvh;
+  display: grid;
+  place-items: center;
+}
+
+.world-frame {
+  width: min(100%, var(--world-max-width));
+  min-height: 0;
+  height: 100%;
+  background: linear-gradient(180deg, #b9e4ff 0%, #d9f2ff 52%, #f1fbff 100%);
+  overflow: hidden;
+}
+
+.touch-controls { display: none; }
+
+.topbar {
+  position: absolute;
+  inset: max(18px, env(safe-area-inset-top, 0px)) max(24px, env(safe-area-inset-right, 0px)) auto max(24px, env(safe-area-inset-left, 0px));
+  display: grid;
+  grid-template-columns: 48px minmax(0, 1fr) 48px;
+  align-items: center;
+  // 개별 버튼 대신 하나의 얇은 가로 바로 묶습니다.
+  padding: 5px 12px;
+  // border: 1px solid #ffffffb0;
+  border-radius: 16px;
+  // 배경만 반투명하게 처리해 글자와 버튼은 선명하게 유지합니다.
+  background: rgba(255, 253, 242, 0.35);
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+  box-shadow: 0 4px 18px #48738d10;
+  z-index: 4;
+  pointer-events: auto;
+  button { pointer-events: auto; cursor: pointer; color: #52798a; font: inherit; }
+  button:focus-visible { outline: 3px solid #70b5cf; outline-offset: 4px; }
+}
+.topbar__icon {
+  width: 48px; height: 36px; border: 0; border-radius: 12px;
+  background: transparent;
+  display: grid; place-items: center;
+  svg { width: 23px; height: 23px; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+  &:hover:not(:disabled) { 
+    // background: #fffdf8;
+    transform: translateY(-1px); 
+  }
+}
+.topbar__brand {
+  justify-self: center; display: flex; align-items: center; gap: 14px;
+  border: 0; border-radius: 8px; padding: 8px 12px;
+  background: transparent; white-space: nowrap;
+  span { font-size: 20px; font-weight: 800; letter-spacing: -1px; line-height: 1.1; }
+  small { border-left: 1px solid #b7cecf; padding-left: 14px; font-size: 13px; font-weight: 600; letter-spacing: 2px; }
+}
+.topbar__settings {
+  grid-column: 3;
+  justify-self: end; position: relative;
+  &:disabled { cursor: default; color: #8aa5ad; }
+}
+.menu-backdrop {
+  position: absolute; inset: 0; z-index: 6; padding: 20px;
+  display: grid; place-items: center;
+  background: #6b9aab30; backdrop-filter: blur(7px);
+}
+.travel-menu {
+  // E로 열 때 창 전체에 생기는 기본 포커스 테두리만 숨깁니다.
+  outline: none;
+  position: relative; width: min(100%, 400px); max-height: calc(100dvh - 40px); overflow: auto;
+  padding: 36px 28px 22px; border-radius: 30px; border: 2px solid #ffffffdd;
+  background: linear-gradient(150deg, #fffdf1, #f0f9fb); box-shadow: 0 18px 70px #48738d25;
+  h2 { font-size: 23px; letter-spacing: -0.6px; margin: 10px 0 25px; }
+  button { color: inherit; cursor: pointer; font: inherit; }
+  button:focus-visible { outline: 3px solid #70b5cf; outline-offset: 3px; }
+  nav { display: grid; gap: 10px; }
+  nav button {
+    display: flex; align-items: center; gap: 12px; padding: 18px 14px; border-radius: 16px;
+    border: 1px solid #d9e9e8; background: #ffffffb3; font-size: 19px; text-align: left;
+    &:hover { background: #e5f4f8; }
+    span { color: #a8bcbf; font-size: 13px; }
+    small { margin-left: auto; color: #819ba3; font-size: 13px; }
+  }
+}
+.travel-menu__close { position: absolute; top: 14px; right: 18px; width: 32px; height: 32px; border: 0; border-radius: 50%; background: #e6f1f2; font-size: 22px !important; }
+.travel-menu__eyebrow { font-size: 13px; letter-spacing: 2px; color: #8eaaae; }
+.travel-menu__footer { margin: 25px 0 0; text-align: center; color: #93a9aa; font-size: 13px; }
+.travel-menu__description { font-size: 14px; line-height: 1.8; }
+.travel-menu__back { border: 0; background: #e0f0f4; padding: 12px 16px; border-radius: 14px; margin-top: 16px; }
+
+.keyboard-guide {
+  position: absolute;
+  bottom: max(18px, env(safe-area-inset-bottom, 0px));
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 12px 20px;
+  border: 1px solid #ffffffb3;
+  border-radius: 24px;
+  background: #fffdf0c9;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 4px 16px #48738d16;
+  font-size: 13px;
+  white-space: nowrap;
+  pointer-events: none;
+  z-index: 2;
+  kbd { font: inherit; font-weight: 700; padding: 4px 6px; border-radius: 6px; background: #fffdf8; }
+}
+
+.experience__canvas {
+  display: block;
+  position: relative;
+  z-index: 0;
+  outline: none;
+  touch-action: none;
+}
+
+.loading-screen {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  overflow: hidden;
+  background: linear-gradient(180deg, #c8eaff 0%, #eaf8ff 100%);
+  transition: opacity 700ms ease, visibility 700ms ease;
+  z-index: 10;
+
+  &.is-hidden {
+    visibility: hidden;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  p {
+    margin: 0;
+    font-size: clamp(0.82rem, 2vw, 1rem);
+    font-weight: 700;
+    letter-spacing: 0.02em;
+  }
+}
+
+.loading-screen__background {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  pointer-events: none;
+}
+
+.loading-screen__content {
+  position: relative;
+  z-index: 1;
+  min-width: 0;
+  min-height: 0;
+  padding: max(20px, env(safe-area-inset-top, 0px)) 16px max(20px, env(safe-area-inset-bottom, 0px));
+  display: grid;
+  place-content: safe center;
+  justify-items: center;
+  gap: 0.85rem;
+  overflow-y: auto;
+}
+
+.loading-screen__logo {
+  display: block;
+  width: auto;
+  max-width: min(72vw, 520px);
+  height: auto;
+  max-height: min(48dvh, 440px);
+  object-fit: contain;
+  filter: drop-shadow(0 12px 24px rgba(61, 102, 139, 0.16));
+}
+
+.loading-screen__cloud {
+  position: relative;
+  width: 5.5rem;
+  height: 2.1rem;
+  border-radius: 999px;
+  background: #fffdf8;
+  box-shadow: 0 0.5rem 1.5rem rgba(92, 152, 184, 0.16);
+  animation: cloud-float 1.8s ease-in-out infinite;
+
+  &::before,
+  &::after {
+    content: "";
+    position: absolute;
+    bottom: 0.55rem;
+    border-radius: 50%;
+    background: inherit;
+  }
+
+  &::before {
+    left: 0.8rem;
+    width: 2.4rem;
+    height: 2.4rem;
+  }
+
+  &::after {
+    right: 0.85rem;
+    width: 1.75rem;
+    height: 1.75rem;
+  }
+}
+
+.journey-title {
+  color: #527f96;
+  span { display: block; font-weight: 800; letter-spacing: -0.7px; line-height: 1.4; word-break: keep-all; }
+  small { display: block; margin-top: 6px; font-size: 13px; font-weight: 600; letter-spacing: 3px; color: #779ba9; }
+}
+.journey-title--loading {
+  margin: 16px 20px 8px; text-align: center;
+  span { font-size: clamp(22px, 4.5vw, 34px); }
+  small { font-size: 13px; letter-spacing: 4px; margin-top: 10px; }
+}
+.journey-title--hud {
+  position: absolute;
+  top: max(14px, env(safe-area-inset-top, 0px));
+  left: max(28px, env(safe-area-inset-left, 0px));
+  z-index: 4;
+  pointer-events: none;
+  img {
+    display: block;
+    width: clamp(118px, 11vw, 164px);
+    height: auto;
+    filter: drop-shadow(0 3px 8px #52798a26);
+  }
+}
+.journey-title--menu {
+  margin: 0 26px 20px 0;
+  span { font-size: 17px; }
+  small { font-size: 13px; letter-spacing: 2px; }
+}
+@media (pointer: coarse), (max-width: 700px) {
+  .journey-title--hud { display: none; }
+  .loading-screen__logo { max-width: min(82vw, 400px); max-height: 43dvh; }
+}
+.loading-screen__progress {
+  width: min(260px, 72vw); height: 12px; padding: 3px;
+  border: 1px solid #ffffffdd; border-radius: 20px; background: #fffdf380;
+  box-shadow: 0 3px 12px #52798a0d;
+  span { display: block; height: 100%; border-radius: inherit; background: linear-gradient(90deg, #badfe8, #8cbfd6); transition: width 180ms ease-out; }
+}
+.loading-screen__percent { font-size: 25px; font-weight: 700; font-variant-numeric: tabular-nums; small { font-size: 13px; margin-left: 3px; } }
+.journey-start {
+  display: grid; justify-items: center; gap: 8px; margin-top: 20px;
+  button { font: inherit; cursor: pointer; }
+  &__primary { padding: 15px 34px; border: 1px solid #ffffffc9; border-radius: 28px; background: #c9e9f7; color: #426f86; font-weight: 700 !important; box-shadow: 0 5px 16px #52798a20; }
+  &__primary:hover { background: #b9dff1; }
+  &__silent { padding: 10px 18px; border: 0; background: transparent; color: #244f63; font-size: 13px !important; font-weight: 700 !important; text-decoration: underline; text-underline-offset: 4px; text-shadow: 0 1px 5px #ffffff, 0 0 10px #ffffffcc; }
+  button:focus-visible { outline: 3px solid #70b5cf; outline-offset: 4px; }
+}
+
+.error-message {
+  position: absolute;
+  left: 50%;
+  bottom: 2rem;
+  margin: 0;
+  padding: 0.75rem 1rem;
+  border-radius: 999px;
+  background: color.adjust(#fff, $alpha: -0.08);
+  color: #ad5d68;
+  font-weight: 700;
+  transform: translateX(-50%);
+}
+
+.interaction-hint {
+  position: absolute;
+  left: 50%;
+  bottom: 88px; // PC 조작 안내와 겹치지 않게 배치
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.55rem 1.05rem 0.55rem 0.8rem;
+  // border: 1px solid rgba(255, 255, 255, 0.82);
+  border-radius: 999px;
+  background: rgba(255, 252, 240, 0.55);
+  backdrop-filter: blur(10px); 
+  box-shadow: 0 0.5rem 1.5rem rgba(92, 152, 184, 0.18);
+  color: #48738d;
+  font-size: clamp(0.75rem, 1.8vw, 0.95rem);
+  font-weight: 700;
+  transform: translateX(-50%);
+  pointer-events: none;
+  z-index: 2;
+  animation: interaction-pop 260ms ease-out both;
+
+  kbd {
+    display: grid;
+    min-width: 1.7rem;
+    height: 1.7rem;
+    place-items: center;
+    border-radius: 0.85rem;
+    background: #8fd8e9;
+    color: #fffdf8;
+    font: inherit;
+    font-size: 0.8rem;
+  }
+}
+
+@media (pointer: coarse), (max-width: 700px) {
+  .topbar { top: max(12px, env(safe-area-inset-top, 0px)); left: max(10px, env(safe-area-inset-left, 0px)); right: max(10px, env(safe-area-inset-right, 0px)); grid-template-columns: 42px minmax(0, 1fr) 42px; padding: 4px; border-radius: 13px; }
+  .topbar__icon { width: 42px; height: 42px; border-radius: 10px; }
+  .topbar__brand { padding: 7px 3px; gap: 8px; span { font-size: 18px; } small { padding-left: 8px; font-size: 13px; letter-spacing: 0.8px; } }
+  .travel-menu { padding: 35px 20px 22px; }
+  .keyboard-guide { display: none; }
+  // 조작 버튼은 월드 위에 겹쳐 표시하고 화면 높이는 전부 사용합니다.
+  .touch-controls {
+    display: flex;
+    position: absolute;
+    bottom: max(12px, env(safe-area-inset-bottom, 0px));
+    left: max(20px, env(safe-area-inset-left, 0px));
+    right: max(20px, env(safe-area-inset-right, 0px));
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    z-index: 3;
+    pointer-events: none;
+  }
+  .touch-stick, .touch-interact, .touch-run, .touch-jump { pointer-events: auto; touch-action: none; user-select: none; -webkit-touch-callout: none; }
+  // 버튼이 늘어나도 조이스틱은 화면 아래쪽의 기존 위치에 유지합니다.
+  .touch-controls { align-items: flex-end; }
+  .touch-actions { display: flex; flex-direction: column; gap: 8px; align-items: stretch; width: 132px; max-width: 44vw; }
+  .touch-stick {
+    position: relative;
+    width: 112px;
+    height: 112px;
+    flex-shrink: 0;
+    display: grid;
+    place-items: center;
+    border: 1px solid #fffdf5a6;
+    border-radius: 50%;
+    background: #fffdf340;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    box-shadow: 0 6px 22px #48738d12;
+  }
+  .touch-stick__knob {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: #fffdf3ed;
+    border: 1px solid #ffffff;
+    box-shadow: 0 3px 0 #b7ced35c, 0 6px 14px #48738d1c;
+  }
+  .touch-interact, .touch-run, .touch-jump {
+    width: 100%; min-height: 52px;
+    padding: 8px 12px;
+    display: flex; align-items: center; justify-content: center;
+    border: 1px solid #fffdf5d9;
+    border-radius: 26px;
+    background: #fffdf3ed;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    box-shadow: 0 3px 0 #b7ced33d, 0 5px 14px #52798a12;
+    color: #48738d;
+    font: inherit;
+    font-weight: 700;
+    font-size: 13px;
+    line-height: 1.4;
+    word-break: keep-all;
+    -webkit-tap-highlight-color: transparent;
+    transition: background-color 150ms ease, box-shadow 150ms ease;
+    &:focus-visible { outline: 3px solid #70b5cf; outline-offset: 3px; }
+  }
+  .touch-run { background: #edf7fac9; }
+  .touch-jump { background: #edf7fac9; }
+  .touch-jump:active { background: #cbe7f0; box-shadow: inset 0 2px 4px #48738d18; }
+  .touch-run small { display: block; font-size: 13px; font-weight: 400; margin-top: 1px; color: #7796a3; }
+  .touch-run.is-held { background: #cbe7f0; box-shadow: inset 0 2px 4px #48738d18; }
+  .touch-interact:disabled { color: #849ba4; background: #fffdf36b; box-shadow: none; border-color: #fffdf575; }
+  .touch-interact:active:not(:disabled) { background: #e0f0f7; box-shadow: inset 0 2px 4px #48738d18; }
+  .interaction-hint { display: none; }
+}
+
+
+@keyframes interaction-pop {
+  from { opacity: 0; transform: translate(-50%, 0.4rem); }
+  to { opacity: 1; transform: translate(-50%, 0); }
+}
+
+// 게임 HUD: 월드는 그대로 두고 모서리에 필요한 도구만 배치합니다.
+.experience {
+  --help-right: max(24px, env(safe-area-inset-right, 0px));
+  --help-bottom: max(20px, env(safe-area-inset-bottom, 0px));
+  --help-size: 48px;
+}
+.topbar {
+  left: auto;
+  display: flex;
+  flex-direction: row-reverse;
+  gap: 10px;
+  padding: 0;
+  background: none;
+  box-shadow: none;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+.topbar__icon, .game-help {
+  width: 48px; height: 48px;
+  border: 1px solid #ffffffdb;
+  border-radius: 50%;
+  color: #52798a;
+  background: #fffdf2eb;
+  box-shadow: 0 4px 12px #52798a20;
+}
+.topbar__icon[aria-expanded="true"] { background: #e1f3fc; }
+.sound-settings {
+  color: #52798a;
+  &__intro { margin: -6px 0 20px; font-size: 13px; line-height: 1.7; color: #7896a5; }
+  &__group { padding: 16px; margin-bottom: 12px; border: 1px solid #d9eaf1; border-radius: 18px; background: #f1f8fbb3; }
+  &__heading { display: flex; align-items: center; justify-content: space-between; gap: 8px; > label, .sound-settings__label { font-size: 14px; font-weight: 700; } }
+  &__auto { display: flex; align-items: center; gap: 7px; color: #63899d; font-size: 12px !important; font-weight: 600 !important; cursor: pointer; input { width: 17px; height: 17px; margin: 0; accent-color: #76b8d5; cursor: pointer; } }
+  &__presets { display: grid; grid-template-columns: repeat(3, 1fr); gap: 7px; margin-top: 14px; button { min-height: 36px; border: 1px solid #d2e4ec; border-radius: 12px; background: #fdfefd; color: #718d9b; font: inherit; font-weight: 700; cursor: pointer; } button[aria-pressed='true'] { background: #cce8f6; border-color: #b5dbea; color: #426f86; } button:disabled { cursor: default; opacity: 0.42; } button:disabled[aria-pressed='true'] { opacity: 1; } }
+  &__hint { display: block; margin-top: 10px; color: #7896a5; font-size: 11px; line-height: 1.5; }
+  &__toggle { min-width: 60px; min-height: 36px; padding: 6px 12px; border: 1px solid #d2e4ec; border-radius: 20px; background: #fdfefd; color: #7b929d; font: inherit; font-size: 13px; cursor: pointer; }
+  &__toggle[aria-pressed="true"] { background: #cce8f6; border-color: #b5dbea; color: #426f86; }
+  &__slider {
+    display: flex; align-items: center; gap: 12px; margin-top: 12px;
+    input {
+      // 기본 range 동작은 유지하고, 브라우저별 트랙과 손잡이만 꾸밉니다.
+      appearance: none; -webkit-appearance: none;
+      flex: 1; min-width: 0; width: 100%; height: 40px; margin: 0;
+      background: transparent; cursor: pointer; border-radius: 12px;
+      &::-webkit-slider-runnable-track {
+        height: 8px; border-radius: 20px;
+        background: linear-gradient(to right, #a3d4e9 0%, #a3d4e9 var(--volume-fill), #e0edf2 var(--volume-fill), #e0edf2 100%);
+        box-shadow: inset 0 1px 2px #52798a16;
+      }
+      &::-moz-range-track {
+        height: 8px; border-radius: 20px;
+        background: linear-gradient(to right, #a3d4e9 0%, #a3d4e9 var(--volume-fill), #e0edf2 var(--volume-fill), #e0edf2 100%);
+        box-shadow: inset 0 1px 2px #52798a16;
+      }
+      &::-webkit-slider-thumb {
+        appearance: none; -webkit-appearance: none; box-sizing: border-box;
+        width: 22px; height: 22px; margin-top: -7px; border-radius: 50%;
+        border: 4px solid #c8e6f2; background: #fffef9; box-shadow: 0 2px 5px #52798a26;
+      }
+      &::-moz-range-thumb {
+        box-sizing: border-box; width: 22px; height: 22px; border-radius: 50%;
+        border: 4px solid #c8e6f2; background: #fffef9; box-shadow: 0 2px 5px #52798a26;
+      }
+      &:active::-webkit-slider-thumb { border-color: #9ccde2; }
+      &:active::-moz-range-thumb { border-color: #9ccde2; }
+    }
+    output { flex: 0 0 48px; padding: 6px 4px; border: 1px solid #deedf3; border-radius: 12px; background: #fffefa; color: #63899d; text-align: center; font-size: 13px; font-weight: 600; font-variant-numeric: tabular-nums; }
+  }
+  button:focus-visible, input:focus-visible { outline: 2px solid #70b5cf; outline-offset: 3px; }
+  > small { display: block; text-align: center; margin-top: 16px; font-size: 13px; color: #7896a5; }
+  [role="status"] { font-size: 13px; line-height: 1.6; }
+}
+.game-help {
+  position: absolute;
+  right: var(--help-right);
+  bottom: var(--help-bottom);
+  z-index: 4; cursor: pointer; font-family: inherit; font-size: 24px; font-weight: 700;
+}
+.game-help:focus-visible { outline: 3px solid #70b5cf; outline-offset: 3px; }
+.menu-backdrop {
+  // 패널이 열린 동안 배경만 흐리게 해 이동이 멈춘 상태를 표시합니다.
+  background: #6b9aab20;
+  -webkit-backdrop-filter: blur(4px);
+  backdrop-filter: blur(4px);
+  place-items: start end;
+  padding: max(82px, calc(env(safe-area-inset-top, 0px) + 64px)) max(24px, env(safe-area-inset-right, 0px)) 20px;
+}
+.travel-menu {
+  width: min(100%, 330px);
+  max-height: calc(100dvh - 110px);
+  padding: 25px 22px;
+  border: 1px solid #b9deed;
+  border-radius: 24px;
+  background: #fffdf7f5;
+  box-shadow: 0 12px 35px #52798a22;
+  h2 { margin: 7px 0 20px; font-size: 21px; }
+  nav { gap: 8px; }
+  nav button {
+    padding: 11px 18px; font-size: 15px; border: 0; background: #edf6f980;
+    flex-wrap: wrap;
+    span {
+      display: grid;
+      flex: 0 0 32px;
+      width: 32px;
+      height: 32px;
+      padding: 0;
+      place-items: center;
+      background: #e0f0f7;
+      border-radius: 10px;
+      color: #7195a6;
+      font-size: 12px;
+      font-variant-numeric: tabular-nums;
+    }
+    small { font-size: 12px; }
+  }
+}
+.journey-title small { letter-spacing: 1.5px; }
+.travel-menu nav button small { line-height: 1.5; }
+@media (max-width: 380px) {
+  .travel-menu nav button { display: grid; grid-template-columns: auto minmax(0, 1fr); }
+  .travel-menu nav button small { grid-column: 2; margin-left: 0; }
+  .sound-settings__heading { flex-wrap: wrap; }
+}
+.travel-menu__eyebrow { margin: 0; font-size: 13px; }
+.game-help__keys {
+  p { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; font-size: 14px; }
+  kbd { background: #e6f2f8; border-radius: 8px; padding: 8px; font: inherit; font-weight: 700; }
+  small { display: block; margin-top: 20px; font-size: 13px; line-height: 1.7; color: #79949f; }
+}
+.object-hint {
+  position: absolute; z-index: 3;
+  transform: translate(-50%, calc(-100% - 12px));
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px 15px;
+  border: 1px solid #b3dbef; border-radius: 18px;
+  background: #fffdf5f5; box-shadow: 0 4px 12px #52798a18;
+  color: #52798a; font-size: 13px; font-weight: 700;
+  white-space: nowrap; pointer-events: none;
+  &::after {
+    content: ''; position: absolute; left: 50%; bottom: -7px;
+    width: 12px; height: 12px; background: #fffdf5;
+    border-right: 1px solid #b3dbef; border-bottom: 1px solid #b3dbef;
+    transform: translateX(-50%) rotate(45deg);
+  }
+  kbd { padding: 6px 10px; border-radius: 8px; background: #e2f1fb; font: inherit; }
+}
+@media (pointer: coarse), (max-width: 700px) {
+  .experience {
+    --help-right: max(14px, env(safe-area-inset-right, 0px));
+    --help-bottom: max(165px, calc(env(safe-area-inset-bottom, 0px) + 150px));
+    --help-size: 42px;
+  }
+  .topbar { left: auto; gap: 8px; padding: 0; }
+  .topbar__icon, .game-help { width: 42px; height: 42px; }
+  .game-help { display: none; }
+  .menu-backdrop { padding: max(66px, calc(env(safe-area-inset-top, 0px) + 54px)) 12px 12px; }
+  .travel-menu { max-height: calc(100dvh - 85px); }
+  .object-hint { font-size: 13px; padding: 8px 12px; gap: 6px; }
+  .object-hint kbd { display: none; }
+}
+
+// 조작 안내는 메뉴 위치가 아닌 물음표 버튼 위 12px에 맞춥니다.
+.menu-backdrop--help {
+  place-items: end end;
+  padding: max(12px, env(safe-area-inset-top, 0px)) var(--help-right) calc(var(--help-bottom) + var(--help-size) + 12px) 12px;
+  .travel-menu {
+    max-height: max(0px, calc(100dvh - var(--help-bottom) - var(--help-size) - 24px - env(safe-area-inset-top, 0px)));
+  }
+}
+
+@keyframes cloud-float {
+  50% {
+    transform: translateY(-0.35rem);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .loading-screen__cloud {
+    animation: none;
+  }
+}

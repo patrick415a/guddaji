@@ -1,0 +1,89 @@
+// 우체통·가이드북의 중앙 패널. 모바일에서는 내부 스크롤을 사용합니다.
+.menu-backdrop.menu-backdrop--feature { place-items: center; grid-template-rows: minmax(0, 1fr); overflow: hidden; padding: max(18px, env(safe-area-inset-top)) max(18px, env(safe-area-inset-right)) max(18px, env(safe-area-inset-bottom)) max(18px, env(safe-area-inset-left)); }
+.travel-menu.feature-panel {
+  width: min(1160px, 100%); max-height: 100%; min-height: 0; min-width: 0; padding: 56px 12px 14px;
+  // 외곽은 고정해 모서리를 잘라내고, 내용만 안쪽에서 스크롤합니다.
+  display: flex; flex-direction: column; overflow: hidden;
+  border: 1px solid #ffffff; border-radius: 30px; background: #fcfefef7;
+  box-shadow: 0 24px 90px #46788d35; overscroll-behavior: contain;
+  scrollbar-width: thin; scrollbar-color: #b8d9e5 transparent;
+  .travel-menu__close { z-index: 2; top: 14px; right: 14px; width: 36px; height: 36px; }
+  &.feature-panel--contact { width: min(550px, 100%); background: #fffdf7fa; padding: 56px 12px 14px; }
+}
+.feature-panel__scroll {
+  min-height: 0; min-width: 0; overflow-y: auto; overflow-x: hidden;
+  padding: 0 20px 20px; overscroll-behavior: contain;
+  scrollbar-gutter: stable; scrollbar-width: thin; scrollbar-color: #b8d9e5 transparent;
+  &::-webkit-scrollbar { width: 7px; }
+  &::-webkit-scrollbar-track { background: transparent; }
+  &::-webkit-scrollbar-thumb { background: #b8d9e5; border-radius: 20px; border: 2px solid transparent; background-clip: padding-box; }
+}
+.guidebook > *, .mailbox-panel, .mailbox-panel__header > div { min-width: 0; overflow-wrap: anywhere; }
+.panel-kicker { color: #83a7b4; font-size: 13px; font-weight: 700; letter-spacing: 2.5px; }
+.character-portrait { display: block; width: 100%; height: 220px; object-fit: contain; }
+.portrait-fallback { text-align: center; padding: 45px 10px; color: #91aebd; }
+.guidebook { display: grid; grid-template-columns: 1fr 1fr 1.45fr; gap: 14px; color: #557589; }
+.guidebook__intro {
+  position: relative; grid-row: span 1; padding: 0 12px;
+  h2 { color: #4c91cb; font-size: 50px !important; margin: 12px 0 !important; letter-spacing: -3px; }
+  h2 small { display: block; font-size: 16px; letter-spacing: 2px; }
+  p:not(.panel-kicker) { font-size: 13px; line-height: 1.8; }
+  // 소개 일러스트만 크게 보여주고 텍스트 아래에서 살짝 오른쪽으로 배치합니다.
+  .character-portrait { position: relative; top: -48px; height: 290px; margin-bottom: -42px; transform: translateX(14px); }
+}
+.guide-card {
+  border: 1px solid #d4e7f1; border-radius: 15px; padding: 18px; background: linear-gradient(145deg, #fff, #f6fbfe88);
+  h3 { margin: 0 0 16px; padding-bottom: 10px; border-bottom: 1px dashed #cee3ef; font-size: 14px; color: #5794c1; }
+  h3 small { display: block; margin-top: 4px; font-size: 13px; font-weight: 500; color: #8eb3ce; }
+  p, li, dd { font-size: 14px; line-height: 1.8; }
+  p { margin: 10px 0 0; }
+  ul { padding-left: 17px; }
+  dl { margin: 0; }
+  dl div { display: grid; grid-template-columns: 70px minmax(0, 1fr); align-items: baseline; gap: 8px; margin: 18px 0; }
+  // 항목명과 본문의 첫 줄 기준선 및 줄 높이를 맞춥니다.
+  dt { font-size: 14px; line-height: 1.8; font-weight: 700; color: #78a4c1; }
+  dd { margin: 0; }
+}
+.guidebook__turn { align-self: stretch; padding-top: 26px; .character-portrait { height: 270px; } }
+.turn-labels { display: flex; justify-content: space-around; span { border-radius: 10px; padding: 4px 12px; background: #ddecfa; color: #6a9dc8; font-size: 13px; } }
+.guide-palette { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px 8px; margin: 20px 0; > div { min-width: 0; text-align: center; } i { display: block; width: min(100%, 48px); margin: auto; aspect-ratio: 1; border-radius: 50%; border: 1px solid #d8e6ef; } small { font-size: 13px; display: block; margin-top: 9px; letter-spacing: -0.5px; } }
+.guide-tags { display: flex; flex-wrap: wrap; gap: 9px; span { padding: 10px 16px; background: #eaf4fb; border-radius: 20px; font-size: 13px; color: #6b98b7; } }
+.guidebook__story { grid-column: span 2; blockquote { color: #629bc7; margin: 6px 0; font-weight: 700; } }
+.guidebook__note { font-size: 13px; color: #7daac6; line-height: 1.8; }
+.mailbox-panel__header { display: flex; align-items: center; min-height: 160px; > div { flex: 1; z-index: 1; } h2 { font-size: clamp(32px, 4vw, 46px); margin: 10px 0; letter-spacing: -1.5px; } p:not(.panel-kicker) { font-size: 13px; } .character-portrait { width: 165px; height: 175px; flex-shrink: 0; } }
+.mailbox-paper { padding: 16px; border: 1px solid #eef3f3; border-radius: 26px; background: #ffffffba; box-shadow: 0 -3px 16px #6797ac08; }
+.mailbox-tabs { display: flex; gap: 6px; padding: 3px; border-radius: 25px; background: #f6f9fa; margin-bottom: 18px; button { flex: 1; border: 0; border-radius: 22px; padding: 12px 8px; background: transparent; font-size: 13px; font-weight: 700; color: #87a7b6; } button[aria-pressed='true'] { background: #cde8fb; color: #4e88b2; } }
+.mailbox-panel form {
+  label { display: block; margin-top: 12px; color: #7295a5; font-size: 13px; font-weight: 600; }
+  input, textarea { display: block; width: 100%; margin-top: 5px; border: 1px solid #dfedf3; border-radius: 18px; background: #f7fafbe6; color: #4e7387; font: inherit; font-size: 13px; padding: 14px 16px; }
+  textarea { min-height: 115px; resize: vertical; line-height: 1.7; }
+  input::placeholder, textarea::placeholder { color: #9ab4c4; }
+  input:focus, textarea:focus { outline: 2px solid #b4d9ef; outline-offset: 1px; }
+}
+.letter-count { text-align: right; font-size: 13px; color: #9ab4c4; margin: 6px 5px 16px; }
+.mailbox-panel .letter-send { display: block; width: 82%; margin: auto; border: 1px solid #c1e1f5; border-radius: 25px; padding: 13px; background: linear-gradient(120deg, #aad7f2, #78abe0); box-shadow: 0 5px 12px #6598ba20; color: white; font-weight: 700; &:disabled { opacity: .6; cursor: wait; } }
+.mailbox-footnote { text-align: center; font-size: 13px; color: #91aab5; line-height: 1.7; margin: 14px 0 0; }
+.letter-status { font-size: 13px; line-height: 1.7; color: #658da1; text-align: center; &:empty { display: none; } }
+.mailbox-contact { min-height: 280px; padding: 30px 12px; text-align: center; span { font-size: 13px; letter-spacing: 2px; color: #8db2c4; } h3 { font-size: 22px; } p { font-size: 13px; line-height: 1.9; } .mailbox-contact__email { display: inline-flex; align-items: center; gap: 9px; border: 1px solid #b9dcec; border-radius: 18px; padding: 10px 14px; background: #fff; color: #538dba; font: inherit; cursor: pointer; small { border-radius: 10px; padding: 3px 7px; background: #e8f5fb; color: #658da1; font-size: 11px; } } .mailbox-contact__copy-status { min-height: 25px; margin: 8px 0 0; color: #658da1; } .contact-pending { border-radius: 18px; background: #edf6fc; padding: 14px; margin-top: 25px; } }
+@media (max-width: 900px) {
+  .guidebook { grid-template-columns: 1fr 1fr; }
+  .guidebook__turn { grid-column: span 2; }
+  .guidebook__story { grid-column: auto; }
+}
+@media (max-width: 560px) {
+  .travel-menu.feature-panel { padding: 56px 8px 10px; max-height: 100%; border-radius: 23px; &.feature-panel--contact { padding: 56px 8px 10px; } }
+  .feature-panel__scroll { padding: 0 8px 12px; }
+  .guidebook { grid-template-columns: minmax(0, 1fr); }
+  .guidebook__turn { grid-column: auto; .character-portrait { height: 230px; } }
+  .guidebook__intro { text-align: center; .character-portrait { top: -30px; height: 265px; margin-bottom: -22px; transform: none; } }
+  .mailbox-panel__header { .character-portrait { width: 110px; height: 145px; } .panel-kicker { font-size: 13px; letter-spacing: 1.5px; } }
+  .mailbox-paper { padding: 12px; }
+  .mailbox-panel input, .mailbox-panel textarea { font-size: 16px; }
+}
+
+// 작은 휴대폰에서는 글씨를 줄이지 않고 내용을 세로로 배치합니다.
+@media (max-width: 380px) {
+  .guide-palette { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .mailbox-panel__header { flex-direction: column; text-align: center; }
+  .panel-kicker { letter-spacing: 1px; }
+}
