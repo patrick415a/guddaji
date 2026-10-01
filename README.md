@@ -1,31 +1,84 @@
-# 구따지
+# 구따지 | A Little Journey
 
-## 이메일 전송 설정
+**바이브 코딩을 통해 구현한 인터랙티브 3D 웹 프로젝트**
 
-1. [Web3Forms](https://web3forms.com/)에서 연락받을 이메일 주소로 무료 Access Key를 발급합니다.
-2. 프로젝트 루트에 `.env.local` 파일을 만들고 아래 값을 추가합니다.
+## 프로젝트 목표
+
+AI를 활용해 캐릭터 콘셉트부터 3D 에셋 제작, 웹 구현까지 연결하고, 아이디어를 실제로 탐험할 수 있는 경험으로 완성했습니다. 캐릭터와 공간의 방향을 직접 정하고 AI가 만든 결과물을 검토·수정하며 프로젝트를 진행했습니다.
+
+## 제작 과정
+
+1. **콘셉트 설정** — 구름 여행자 ‘구따지’의 캐릭터 콘셉트와 3D 웹의 방향을 정했습니다.
+2. **시안 제작** — GPT로 캐릭터 이미지를 만들고, 원하는 웹 경험을 설명해 전체 화면 시안을 구체화했습니다.
+3. **3D 에셋 제작** — 시안 속 캐릭터·소품·지형을 각각 모델링에 적합한 이미지로 분리해 제작한 뒤, Meshy에 입력해 3D 모델을 얻었습니다.
+4. **웹 구현** — Codex와 함께 3D 모델을 웹에 적용하고 이동, 상호작용, 조명, UI와 이메일 기능을 구현했습니다.
+5. **검토와 조정** — 실행 결과를 확인하며 오류를 수정하고 조명·성능·움직임의 세부 수치를 조정했습니다.
+
+### AI와 도구의 역할
+
+| 도구 | 사용 목적 |
+| --- | --- |
+| GPT 이미지 생성 | 캐릭터 콘셉트 이미지, 화면 시안과 오브젝트별 모델링 참고 이미지 제작 |
+| Codex + GPT-6 Astra | 프로젝트 초기 규격과 전체 구조 설계 |
+| Codex + GPT-6 Sol | 기본 틀이 잡힌 뒤 오류 수정과 수치 조정 등 반복 작업 지원 |
+| Meshy | 참고 이미지를 3D 모델 에셋으로 제작 |
+| React + Vite | 웹 화면과 프로젝트 구성 |
+| Three.js | 3D 월드 렌더링과 캐릭터 상호작용 |
+| Sass | 화면 스타일 구성 |
+| Web3Forms | 우체통의 이메일 전송 |
+
+초기 설계와 이후의 반복 수정에 서로 다른 모델을 사용해 작업 성격과 비용을 함께 고려했습니다.
+
+## 구따지 소개
+
+구따지는 작은 세계를 여행하는 구름 캐릭터입니다. 사용자는 구따지를 직접 움직여 섬을 산책하고, 다리를 건너고, 주변 오브젝트와 상호작용할 수 있습니다. 표지판에서는 캐릭터 가이드북을 읽고, 우체통에서는 편지를 남길 수 있습니다.
+
+### 실제 실행 화면
+
+![구따지 웹 프로젝트의 실제 시작 화면](./public/images/readme-opening.png)
+
+*로컬에서 실행한 프로젝트의 시작 화면을 직접 캡처했습니다.*
+
+### 주요 기능
+
+- **3D 탐험:** 이동, 달리기, 점프, 앉기와 오브젝트 상호작용
+- **낮·밤 테마:** 조명과 환경 분위기 전환
+- **캐릭터 가이드북:** 구따지의 소개, 모습과 컬러 팔레트
+- **우체통:** 연락처 확인과 편지 전송
+- **기기별 조작:** 키보드와 모바일 터치 조이스틱
+- **성능 설정:** 경량 3D 모델과 기기 성능에 따른 자동 그래픽 품질 조절
+- **사운드 설정:** 배경음악, 효과음과 음량 조절
+
+### 조작 방법
+
+| 동작 | PC | 모바일 |
+| --- | --- | --- |
+| 이동 | `WASD` 또는 방향키 | 화면 조이스틱 |
+| 달리기 | `Shift` + 이동 | 달리기 버튼 |
+| 점프 | `Space` | 점프 버튼 |
+| 살펴보기·앉기·일어나기 | 대상 근처에서 `E` | 대상 근처에서 상호작용 버튼 |
+
+게임 화면의 `?` 버튼에서도 조작 방법을 확인할 수 있습니다.
+
+## 로컬 실행
+
+```bash
+npm install
+npm run dev
+```
+
+개발 서버가 출력한 주소를 브라우저에서 열면 됩니다. 배포용 파일은 `npm run build`로 만들 수 있습니다.
+
+### 이메일 전송 설정
+
+편지 전송을 사용하려면 [Web3Forms](https://web3forms.com/)에서 Access Key를 발급받고, 프로젝트 루트에 `.env.local` 파일을 만듭니다.
 
 ```env
 VITE_WEB3FORMS_ACCESS_KEY=발급받은_Access_Key
 ```
 
-3. 개발 서버를 다시 시작합니다. 환경 변수는 서버를 다시 시작해야 적용됩니다.
+설정 후 개발 서버를 다시 시작하세요. Key가 없으면 월드 탐험은 가능하지만 편지 전송은 동작하지 않습니다. `VITE_` 환경 변수는 브라우저 코드에 포함되므로 비밀 정보 저장 용도로 사용하면 안 됩니다.
 
-`.env.local`은 Git에서 제외됩니다. Access Key는 Web3Forms 정책상 브라우저에 공개되어도 되는 식별자지만, 저장소에는 개인별 설정을 남기지 않도록 분리했습니다.
+## 저장소 안내
 
-# React + Vite
-
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
-
-Currently, two official plugins are available:
-
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
-
-## React Compiler
-
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the Oxlint configuration
-
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and Oxlint's TypeScript related rules in your project.
+`/artifacts/`, `.env.local`, `.env.example`, 빌드 결과물과 의존성 폴더는 Git 업로드 대상에서 제외했습니다.
