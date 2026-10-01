@@ -37,6 +37,8 @@ AI를 활용해 캐릭터 콘셉트부터 3D 에셋 제작, 웹 구현까지 연
 
 ![구따지 웹 프로젝트의 실제 시작 화면](./public/images/readme-opening.png)
 
+![여행 시작하기를 누른 뒤의 구따지 3D 게임 화면](./public/images/readme-game.jpg)
+
 ### 주요 기능
 
 - **3D 탐험:** 이동, 달리기, 점프, 앉기와 오브젝트 상호작용
