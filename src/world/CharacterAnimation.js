@@ -1,4 +1,5 @@
 import * as THREE from "three";
+import { createLoopClip } from "./createLoopClip.js";
 
 // GLB의 재생 방향을 Stand → Sit 순서로 통일합니다.
 // Sit은 LoopOnce로 재생하고, 끝 자세를 유지합니다.
@@ -89,12 +90,9 @@ export class CharacterAnimation {
     const idleClip = inPlace(
       find(config.animationClips.idle)
     );
-    const walkClip = inPlace(
-      find(config.animationClips.walk)
-    );
-    const runClip = inPlace(
-      find(config.animationClips.run)
-    );
+    // 걷기/달리기는 반복 경계의 높이와 관절 각도를 부드럽게 연결합니다.
+    const walkClip = createLoopClip(inPlace(find(config.animationClips.walk)));
+    const runClip = createLoopClip(inPlace(find(config.animationClips.run)));
     const jumpClip = inPlace(
       find(config.animationClips.jump),
       true

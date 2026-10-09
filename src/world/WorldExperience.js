@@ -85,6 +85,7 @@ export class WorldExperience {
     this.onInteractionPosition = callbacks.onInteractionPosition;
     this.hintPosition = new THREE.Vector3();
     this.onOpenPanel = callbacks.onOpenPanel;
+    this.characterSkeletons = [];
     this.moveDirection = new THREE.Vector3();
     this.jumpElapsed = null;
     this.jumpOffset = 0;
@@ -307,11 +308,15 @@ export class WorldExperience {
     character.scale.multiplyScalar(CHARACTER_CONFIG.assetScale);
     this.prepareMaterials(character, { castShadow: true, receiveShadow: true });
     this.enableAccentLighting(character);
+    const skeletons = new Set();
     character.traverse((child) => {
       if (!child.isMesh) return;
       child.receiveShadow = false;
       child.layers.enable(2);
+      if (child.isSkinnedMesh) skeletons.add(child.skeleton);
     });
+    // 메시 여러 개가 같은 뼈를 공유할 수 있으므로 중복 갱신을 피합니다.
+    this.characterSkeletons = [...skeletons];
     this.fixCharacterTextureSeams(character);
     character.name = "guddaji";
     this.scene.add(character);
@@ -859,6 +864,15 @@ export class WorldExperience {
     );
   }
 
+  updateCharacterSkeletons() {
+    if (!this.character) return;
+    // 앉기 위치를 포함한 이번 프레임의 변환을 먼저 뼈에 반영합니다.
+    this.character.updateMatrixWorld(true);
+    // 그림자 갱신을 건너뛴 프레임에도 GPU에 전달할 자세는 최신이어야 합니다.
+    // Three.js의 렌더/그림자 패스 캐시에 맡기면 이전 자세가 한 프레임 남을 수 있습니다.
+    for (const skeleton of this.characterSkeletons) skeleton.update();
+  }
+
   setCharacterAnimation(nextAnimation) {
     // 공중에서는 다른 모션으로 바꾸지 않고 이륙 직전 자세를 유지합니다.
     if (this.jumpElapsed !== null) return;
@@ -952,9 +966,10 @@ export class WorldExperience {
     if (this.character && this.terrainSurface && this.quality.sample(frameDelta)) this.applyQuality();
     this.updateCharacter(deltaTime);
     this.updateInteraction(deltaTime);
-    // Mixer 시간(블렌딩 포함)을 멈춰 현재 팔·다리 자세를 정확히 고정합니다.
+    // 모션과 앉기 위치를 적용한 뒤, 그림자 주기와 독립적으로 뼈를 갱신합니다.
     this.characterAnimation?.update(deltaTime);
     this.updateSeatingPosition();
+    this.updateCharacterSkeletons();
     this.responsiveCamera.update(deltaTime, this.character);
     this.water?.update(deltaTime);
     this.skyClouds?.update(deltaTime);

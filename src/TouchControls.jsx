@@ -34,6 +34,19 @@ export function TouchControls({ onMove, onRun, onJump, onInteract, interactionHi
     onRun(active);
   }
 
+  function pressAction(event, action) {
+    if (event.button !== 0) return;
+    // 두 번째 손가락도 pointerdown으로 즉시 처리합니다.
+    // 브라우저가 나중에 만드는 click으로 같은 동작을 두 번 실행하지 않습니다.
+    event.preventDefault();
+    action();
+  }
+
+  function keyboardAction(event, action) {
+    // 키보드/보조기기의 클릭은 pointerdown이 없으므로 따로 유지합니다.
+    if (event.detail === 0) action();
+  }
+
   function move(event) {
     if (pointer.current !== event.pointerId) return;
     const rect = event.currentTarget.getBoundingClientRect();
@@ -59,6 +72,7 @@ export function TouchControls({ onMove, onRun, onJump, onInteract, interactionHi
       <div className="touch-stick" aria-label="드래그하여 이동"
         onPointerDown={(event) => {
           if (pointer.current !== null) return;
+          event.preventDefault();
           pointer.current = event.pointerId;
           event.currentTarget.setPointerCapture(event.pointerId);
           move(event);
@@ -69,19 +83,23 @@ export function TouchControls({ onMove, onRun, onJump, onInteract, interactionHi
         <span className="touch-stick__knob" style={{ transform: `translate(${stick.x}px, ${stick.y}px)` }} />
       </div>
       <div className="touch-actions">
-      <button className="touch-jump" type="button" onClick={onJump}
+      <button className="touch-jump" type="button"
+        onPointerDown={(event) => pressAction(event, onJump)}
+        onClick={(event) => keyboardAction(event, onJump)}
         onContextMenu={(event) => event.preventDefault()}>
         <span>점프</span>
       </button>
       <button className={`touch-run${running ? ' is-held' : ''}`} type="button"
         aria-label="달리기" aria-pressed={running}
         // 점프 버튼을 눌러도 달리기 선택은 유지합니다.
-        onClick={() => setRun(!running)}
+        onPointerDown={(event) => pressAction(event, () => setRun(!running))}
+        onClick={(event) => keyboardAction(event, () => setRun(!running))}
         onContextMenu={(event) => event.preventDefault()}>
         <span>달리기 <small>{running ? 'ON' : 'OFF'}</small></span>
       </button>
       <button className="touch-interact" type="button" disabled={!interactionHint}
-        onClick={onInteract}>
+        onPointerDown={(event) => pressAction(event, onInteract)}
+        onClick={(event) => keyboardAction(event, onInteract)}>
         <span>{interactionHint?.label ?? "살펴보기"}</span>
       </button>
       </div>
